@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace weather_info
 {
-    internal class Class1
+    class WeatherResponse
     {
+        public TemperatureInfo Main { get; set; }
+
+        public string Name { get; set; }
     }
 }
