@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace weather_info
 {
-    class WeatherResponse
+    class SunInfo
     {
-        public TemperatureInfo Main { get; set; }
+        public long Sunrise { get; set; }
 
-        public SunInfo Sys { get; set; }
-
-        public string Name { get; set; }
+        public long Sunset { get; set; }
     }
 }

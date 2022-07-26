@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace weather_info
 {
-    internal class TemperatureInfo
+    class TemperatureInfo
     {
+        public float Temp { get; set; }
     }
 }
