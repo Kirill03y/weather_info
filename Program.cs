@@ -4,6 +4,8 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using weather_info;
+using weather_info.DataModel;
+
 
 namespace weather
 {
@@ -29,7 +31,19 @@ namespace weather
             }
             return res;
         }
+        static void Print(string city)
+        {
+            WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(responseWeather(city));
 
+            DateTime sRise = new DateTime(1970, 1, 1).Add(TimeSpan.FromTicks(weatherResponse.Sys.Sunrise * TimeSpan.TicksPerSecond)).ToLocalTime();
+            DateTime sSet = new DateTime(1970, 1, 1).Add(TimeSpan.FromTicks(weatherResponse.Sys.Sunset * TimeSpan.TicksPerSecond)).ToLocalTime();
+
+
+            Console.WriteLine("Temperature in {0}, {1} °C\nsunrise - {2}, sunset - {3}\n",
+                weatherResponse.Name, weatherResponse.Main.Temp, sRise.ToLongTimeString(), sSet.ToLongTimeString());
+
+            Repository.Add(weatherResponse.Name);
+        }
         static void Main(string[] args)
         {
             bool flag = true;
@@ -37,24 +51,21 @@ namespace weather
             {
                 try
                 {
+
                     Console.WriteLine("Enter City: ");
                     string city = Console.ReadLine();
 
-                    WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(responseWeather(city));
+                    Print(city);
 
-                    DateTime sRise = new DateTime(1970, 1, 1).Add(TimeSpan.FromTicks(weatherResponse.Sys.Sunrise * TimeSpan.TicksPerSecond)).ToLocalTime();
-                    DateTime sSet = new DateTime(1970, 1, 1).Add(TimeSpan.FromTicks(weatherResponse.Sys.Sunset * TimeSpan.TicksPerSecond)).ToLocalTime();
+                    //Repository.Create();
 
+                    Repository.PrintTable();
 
-                    Console.WriteLine("Temperature in {0}, {1} °C\nsunrise - {2}, sunset - {3}\n",
-                        weatherResponse.Name, weatherResponse.Main.Temp, sRise.ToLongTimeString(), sSet.ToLongTimeString());
-
-                    
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
-                    throw;
+                    Console.WriteLine(ex);
+                    
                 }
             }
             
