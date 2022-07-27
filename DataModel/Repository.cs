@@ -11,23 +11,30 @@ namespace weather_info.DataModel
     {
         public static void Create()
         {
-            using (var connection = new SqliteConnection("Data Source=usersdata.db"))
+            try
             {
-                connection.Open();
+                using (var connection = new SqliteConnection("Data Source=usersdata.db"))
+                {
+                    connection.Open();
 
-                SqliteCommand command = new SqliteCommand();
-                command.Connection = connection;
-                command.CommandText = "CREATE TABLE Cities(_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Count INTEGER NOT NULL)";
-                command.ExecuteNonQuery();
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+                    command.CommandText = "CREATE TABLE Cities(_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Count INTEGER NOT NULL)";
+                    command.ExecuteNonQuery();
 
-                Console.WriteLine("Таблица Cities создана");
+                    Console.WriteLine("Table is created");
+                }
             }
+            catch (Exception)
+            {
+                Console.WriteLine("Error, table is already exists!");
+                throw;
+            }
+           
             
         }
         public static void Add(string city)
-        {
-            
-            
+        {       
             string sqlExpression = "INSERT INTO Cities (Name, Count) VALUES (@name, @count)";
             using (var connection = new SqliteConnection("Data Source=usersdata.db"))
             {
@@ -46,16 +53,13 @@ namespace weather_info.DataModel
                 command.Parameters.Add(countParam);
 
                 int number = command.ExecuteNonQuery();
-                Console.WriteLine($"Добавлено объектов: {number}");
-
-                
-            }
-            
+            }          
         }
         public static int Counter(string city)
         {
-            int res = 0;
+            int res = 1;
             string sqlExpression = $"SELECT * FROM Cities WHERE Name='{city}'";
+
             using (var connection = new SqliteConnection("Data Source=usersdata.db"))
             {
                 connection.Open();
@@ -84,19 +88,42 @@ namespace weather_info.DataModel
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
+                    Console.WriteLine("--------------------------------");
+                    Console.WriteLine("Id  \t City  \t      total");
                     if (reader.HasRows) 
                     {
+                        
                         while (reader.Read())
                         {
                             var id = reader.GetValue(0);
                             var name = reader.GetValue(1);
                             var count = reader.GetValue(2);
-
-                            Console.WriteLine($"{id} \t {name} \t {count}");
+                            
+                            
+                            Console.WriteLine($"{id}  \t{name}    \t{count}");
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No results...");
                     }
                 }
             }
+        }
+        public static void Clear()
+        {
+            string sqlExpression = "Drop table Cities";
+            using (var connection = new SqliteConnection("Data Source=usersdata.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+
+                int number = command.ExecuteNonQuery();
+
+                Console.WriteLine($"Deleted.");
+            }
+            Create();
         }
     }
 }
