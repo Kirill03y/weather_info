@@ -30,7 +30,7 @@ namespace weather_info
             }
             return res;
         }
-        public static void Print(string city)
+        public static void SearchWeather(string city, Rep repository)
         {
             WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(responseWeather(city));
 
@@ -41,7 +41,10 @@ namespace weather_info
             Console.WriteLine("Temperature in {0}, {1} °C\nsunrise - {2}, sunset - {3}\n",
                 weatherResponse.Name, weatherResponse.Main.Temp, sRise.ToLongTimeString(), sSet.ToLongTimeString());
 
-            Repository.Add(weatherResponse.Name);
+            repository.City = weatherResponse.Name;
+            
+
+            //Repository.Add(weatherResponse.Name);
         }
     }
 }
