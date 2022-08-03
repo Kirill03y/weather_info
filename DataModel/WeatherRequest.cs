@@ -8,8 +8,8 @@ namespace weather_info.DataModel
 {
     class WeatherRequest
     {
-        public int ID { get; set; }   
+        public long Id { get; set; }   
         public string City { get; set; }
-        public int Count { get; set; }
+        public long Count { get; set; }
     }
 }

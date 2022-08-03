@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using weather_info.DataModel;
+using weather_info.ExcelExport;
 
 namespace weather_info
 {
@@ -43,8 +44,16 @@ namespace weather_info
 
             repository.City = weatherResponse.Name;
             
+        }
 
-            //Repository.Add(weatherResponse.Name);
+        public static void GenerateExcel(Rep repository)
+        {
+
+            var reportExcel = new MarketExcelGenerator()
+                .Generate(repository.GetArray());
+
+            File.WriteAllBytes("Report.xlsx", reportExcel);
+            Console.WriteLine("Export completed");
         }
     }
 }

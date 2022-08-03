@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using weather_info.Interface;
+using weather_info.DataModel;
 
 namespace weather_info.DataModel
 {
-    class Rep : IRep
+    class Rep : IRep<WeatherRequest>
     {
         private string ConnectionString { get; set; }
 
@@ -100,7 +101,7 @@ namespace weather_info.DataModel
 
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
-                    command.CommandText = "CREATE TABLE Cities(_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Count INTEGER NOT NULL)";
+                    command.CommandText = "CREATE TABLE Cities(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL, Count INTEGER NOT NULL)";
                     command.ExecuteNonQuery();
 
                     Console.WriteLine("Table is created");
@@ -142,6 +143,40 @@ namespace weather_info.DataModel
                     {
                         Console.WriteLine("No results...");
                     }
+                }
+            }
+        }
+        public List<WeatherRequest> GetArray()
+        {
+            int counter = 1;
+            List<WeatherRequest> requests = new List<WeatherRequest>();
+            string sqlExpression = "SELECT * FROM Cities";
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+
+                            object id = reader.GetValue(0);
+                            object name = reader.GetValue(1);
+                            object count = reader.GetValue(2);
+
+                            requests.Add(new WeatherRequest
+                            {
+                                Id = (long)id,
+                                City = (string)name,
+                                Count = (long)count
+                            });
+                            counter++;
+                        }
+                    }
+                    return requests;
                 }
             }
         }

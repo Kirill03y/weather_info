@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using weather_info;
 using weather_info.DataModel;
-
+using OfficeOpenXml;
 
 namespace weather
 {
@@ -16,7 +16,7 @@ namespace weather
         static void Main(string[] args)
         {
             string connectionString = "Data Source=usersdata.db";
-
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             Rep repository = new Rep(connectionString);
 
             bool flag = true;
@@ -24,8 +24,8 @@ namespace weather
             {
                 try
                 {
-                    Console.WriteLine("____________________________________________________________\n" +
-                        "1 - Find weather / 2 - Requests history / 3 - Clear requests");
+                    Console.WriteLine("_______________________________________________________________________________\n" +
+                        "1 - Find weather / 2 - Requests history / 3 - Clear requests / 4 - Export .xlsx");
                     switch (int.Parse(Console.ReadLine()))
                     {
                         case 1:
@@ -34,7 +34,6 @@ namespace weather
 
                             Methods.SearchWeather(city, repository);
                             repository.Add();
-
                             break;
 
                         case 2:
@@ -43,6 +42,9 @@ namespace weather
 
                         case 3:
                             repository.Clear();
+                            break;
+                        case 4:
+                            Methods.GenerateExcel(repository);
                             break;
 
                         default:
@@ -62,8 +64,7 @@ namespace weather
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
-                    
+                    Console.WriteLine(ex);                
                 }
             }
             

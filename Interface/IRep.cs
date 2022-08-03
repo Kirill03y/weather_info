@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using weather_info.DataModel;
 
 namespace weather_info.Interface
 {
-    public interface IRep
+    public interface IRep<T>
     {
         void Create();
 
@@ -17,5 +18,6 @@ namespace weather_info.Interface
         void PrintTable();
 
         void Clear();
+
     }
 }
