@@ -44,6 +44,8 @@ namespace weather_info.ExcelExport
             sheet.Cells[2, 2, 2, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
 
             sheet.Cells[2, 2, 2 + city.Count, 4].Style.Border.BorderAround(ExcelBorderStyle.Double);
+            sheet.Cells[2, 2, 2, 4].Style.Fill.SetBackground(OfficeOpenXml.Drawing.eThemeSchemeColor.Accent6);
+
 
             return package.GetAsByteArray();
         }

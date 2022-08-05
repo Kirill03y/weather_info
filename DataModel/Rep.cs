@@ -169,9 +169,9 @@ namespace weather_info.DataModel
 
                             requests.Add(new WeatherRequest
                             {
-                                Id = (long)id,
+                                Id = (int)(long)id,
                                 City = (string)name,
-                                Count = (long)count
+                                Count = (int)(long)count
                             });
                             counter++;
                         }
